@@ -29,6 +29,21 @@ class GlitchProjects extends Component {
       )>-1)
     )
   }
+  buildString(domain,description,wrapAt=80,tabLength=4) {
+    let s = `${domain} – ${description}`
+    if(s.length>80){
+      const words = description.split(' ')
+      const lines = [`${domain} – `]
+      while(words.length>0){
+        if(lines.length>0 && (lines[lines.length-1].length + words[0].length <= wrapAt))
+          lines[lines.length-1] = lines[lines.length-1]+' '+words.shift()
+        else lines.push((lines.length==0?'':''.padEnd(tabLength))+words.shift())
+      }
+      s=lines.join('\n')
+      //s=s.substring(0,wrapAt-1)+'\n'.padEnd(1+tabLength)+s.substring(wrapAt)
+    }
+    return s
+  }
   render() {
     return (this.state.loaded?
       <div>
@@ -44,7 +59,7 @@ class GlitchProjects extends Component {
               onChange={() => {}/*this.setState({current:o})*/}
               onSelect={() => opn(`https://glitch.com/~${o.domain}`, { wait: false }).then(x=>process.exit())}
             >
-              {`${o.domain} – ${o.description}`}
+              {this.buildString(o.domain,o.description)}
             </Option> )
           }
         </Select>
