@@ -9,13 +9,13 @@ const opts = argv._;
 const pins = argv.p||argv.pins;
 
 if(opts.length<1){
-  //console.log('Whoops! You need to pass a username `$ gli davidsharp` 🤦‍')
-  //process.exit()
-  prompt.message='🎏  '
+  console.log('Whoops! You need to pass a username `$ gli davidsharp` 🤦‍')
+  process.exit()
+  /*prompt.message='🎏  '
   prompt.delimiter=' ~ '
   prompt.start();
   prompt.get(['Glitch Username'], function (err, result) {
     render(h(GlitchProjects,{opts:[result['Glitch Username']],pins}))
-  });
+  });*/
 }
 else render(h(GlitchProjects,{opts,pins}));
