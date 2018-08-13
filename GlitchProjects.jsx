@@ -34,7 +34,8 @@ class GlitchProjects extends Component {
       <div>
         {`${this.props.pins?'📌   Pinned ':''}Glitch projects of ${this.state.user.name} (${this.state.user.login})`}
         <br />
-        {`${this.state.user.description}`}
+        {`"${this.state.user.description}"`}
+        <br /><Separator />
         <Select onSelect={item => this.setState({message: item + ' was selected'})}>
           {
             this.state.projects.map( o => <Option value={o.domain}
