@@ -2,7 +2,9 @@
   "name": "gli",
   "version": "1.0.0",
   "main": "gli.js",
-  "bin": {"gli": "gli.js"},
+  "bin": {
+    "gli": "gli.js"
+  },
   "author": "David Sharp <davidsharp@charanga.com>",
   "license": "MIT",
   "dependencies": {
@@ -11,6 +13,7 @@
     "ink-select": "^1.2.0",
     "minimist": "^1.2.0",
     "node-fetch": "^2.2.0",
-    "opn": "^5.3.0"
+    "opn": "^5.3.0",
+    "prompt": "^1.0.0"
   }
 }
