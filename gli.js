@@ -6,4 +6,9 @@ const GlitchProjects = require('import-jsx')('./GlitchProjects.jsx', {pragma: 'h
 
 const opts = argv._;
 
+if(opts.length<1){
+  console.log('Whoops! You need to pass a username `$ gli davidsharp` 🤦‍')
+  process.exit()
+}
+
 const unmount = render(h(GlitchProjects,{opts}));
