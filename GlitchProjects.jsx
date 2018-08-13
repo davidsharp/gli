@@ -1,4 +1,4 @@
-const {h, Component, Text} = require('ink');
+const {h, Component, Text, Bold, Color} = require('ink');
 const {Select, Option, Separator} = require('ink-select');
 const opn = require('opn');
 const fetch = require('node-fetch');
@@ -32,9 +32,11 @@ class GlitchProjects extends Component {
   render() {
     return (this.state.loaded?
       <div>
+        <Bold><Color keyword="magenta">
         {`${this.props.pins?'📌   Pinned ':''}Glitch projects of ${this.state.user.name} (${this.state.user.login})`}
         <br />
         {`"${this.state.user.description}"`}
+        </Color></Bold>
         <br /><Separator />
         <Select onSelect={item => this.setState({message: item + ' was selected'})}>
           {
