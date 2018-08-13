@@ -1,12 +1,13 @@
 const {h, Component, Text, Bold, Color} = require('ink');
 const {Select, Option, Separator} = require('ink-select');
+const ProjectPagination = require('import-jsx')('./ProjectPagination.jsx', {pragma: 'h'});
 const opn = require('opn');
 const fetch = require('node-fetch');
 
 class GlitchProjects extends Component {
   constructor(props){
     super(props)
-    this.state={loaded:false,user:{},projects:[]}
+    this.state={loaded:false,user:{},projects:[],pages:[],page:0}
     fetch(`https://api.glitch.com/users/byLogins?logins=${props.opts[0]}`)
       .then(r=>r.json())
       .then(user=>{
@@ -14,9 +15,11 @@ class GlitchProjects extends Component {
           console.log(`Whoops! User "${props.opts[0]}" not found! 🤦‍`)
           process.exit()
         }
+        const pagesObj=this.buildPages(props.pins?this.getPins(user[0]):user[0].projects)
         this.setState({
           loaded:true,
           projects:(props.pins?this.getPins(user[0]):user[0].projects),
+          pages:pagesObj.pages,
           user:user[0]
         })
       })
@@ -44,6 +47,22 @@ class GlitchProjects extends Component {
     }
     return s
   }
+  buildPages(projects,pageLength=8) {
+    let pro = [...projects]
+    let pages = [[]]
+    while(pro.length>0){
+      if(pages[pages.length-1].length + 1/*pro[0].length*/ <= pageLength)
+        pages[pages.length-1].push(pro.shift())
+      else pages.push([pro.shift()])
+    }
+    console.log(pages[0].length,pages[1].length)
+    return {
+      pages,
+      pageLength,
+      numberOfPages:pages.length,
+      numberofProjects:projects.length
+    }
+  }
   render() {
     return (this.state.loaded?
       <div>
@@ -52,17 +71,17 @@ class GlitchProjects extends Component {
         <br />
         {`"${this.state.user.description}"`}
         </Color></Bold>
+        <br />
+        {`Page ${this.state.page+1}`}
         <br /><Separator />
-        <Select onSelect={item => this.setState({message: item + ' was selected'})}>
-          {
-            this.state.projects.map( o => <Option value={o.domain}
-              onChange={() => {}/*this.setState({current:o})*/}
-              onSelect={() => opn(`https://glitch.com/~${o.domain}`, { wait: false }).then(x=>process.exit())}
-            >
-              {this.buildString(o.domain,o.description)}
-            </Option> )
-          }
-        </Select>
+        <ProjectPagination
+          page={this.state.pages[this.state.page]}
+          onAny={item => this.setState({message: item + ' was selected'})}
+          onOption={o => opn(`https://glitch.com/~${o.domain}`, { wait: false }).then(x=>process.exit())}
+          nextPage={() => this.setState({page:this.state.page+1})}
+          prevPage={() => this.setState({page:this.state.page-1})}
+          optionString={this.buildString}
+        />
         <br />
         { this.state && this.state.message && <Text green>{this.state.message}</Text>}
       </div>
