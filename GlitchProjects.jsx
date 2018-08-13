@@ -9,7 +9,13 @@ class GlitchProjects extends Component {
     this.state={loaded:false,user:{}}
     fetch(`https://api.glitch.com/users/byLogins?logins=${props.opts[0]}`)
       .then(r=>r.json())
-      .then(user=>this.setState({loaded:true,user:user[0]}))
+      .then(user=>{
+        if(user.length<1){
+          console.log(`Whoops! User "${props.opts[0]}" not found! 🤦‍`)
+          process.exit()
+        }
+        this.setState({loaded:true,user:user[0]})
+      })
   }
   render() {
     return (this.state.loaded?
