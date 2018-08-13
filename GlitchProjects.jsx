@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 class GlitchProjects extends Component {
   constructor(props){
     super(props)
-    this.state={loaded:false,user:{}}
+    this.state={loaded:false,user:{},projects:[]}
     fetch(`https://api.glitch.com/users/byLogins?logins=${props.opts[0]}`)
       .then(r=>r.json())
       .then(user=>{
@@ -14,18 +14,30 @@ class GlitchProjects extends Component {
           console.log(`Whoops! User "${props.opts[0]}" not found! 🤦‍`)
           process.exit()
         }
-        this.setState({loaded:true,user:user[0]})
+        this.setState({
+          loaded:true,
+          projects:(props.pins?this.getPins(user[0]):user[0].projects),
+          user:user[0]
+        })
       })
+  }
+  getPins(user) {
+    const ids = user.pins.map(p=>(p.projectId))
+    return user.projects.filter(
+      c=>(ids.findIndex(
+        id=>id==c.projectPermission.projectId
+      )>-1)
+    )
   }
   render() {
     return (this.state.loaded?
       <div>
-        {`Glitch projects of ${this.state.user.name} (${this.state.user.login})`}
+        {`${this.props.pins?'📌   Pinned ':''}Glitch projects of ${this.state.user.name} (${this.state.user.login})`}
         <br />
         {`${this.state.user.description}`}
         <Select onSelect={item => this.setState({message: item + ' was selected'})}>
           {
-            this.state.user.projects.map( o => <Option value={o.domain}
+            this.state.projects.map( o => <Option value={o.domain}
               onChange={() => {}/*this.setState({current:o})*/}
               onSelect={() => opn(`https://glitch.com/~${o.domain}`, { wait: false }).then(x=>process.exit())}
             >
