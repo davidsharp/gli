@@ -21,7 +21,7 @@ class GlitchProjects extends Component {
           {
             this.state.user.projects.map( o => <Option value={o.domain}
               onChange={() => {}/*this.setState({current:o})*/}
-              onSelect={() => opn(`https://glitch.com/~${o.domain}`)}
+              onSelect={() => opn(`https://glitch.com/~${o.domain}`, { wait: false })}
             >
               {`${o.domain} – ${o.description}`}
             </Option> )

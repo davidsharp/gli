@@ -2,6 +2,7 @@
   "name": "gli",
   "version": "1.0.0",
   "main": "gli.js",
+  "bin": {"gli": "gli.js"},
   "author": "David Sharp <davidsharp@charanga.com>",
   "license": "MIT",
   "dependencies": {
